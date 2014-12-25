@@ -1,4 +1,4 @@
-Lasertag
+LazorTag
 ========
 
 A cheap open-source Arduino Lasertag system.

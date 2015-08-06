@@ -5,9 +5,9 @@
 
 class IRSend
 {
-  public:
+public:
 	IRSend();
-	void sendData(int data);
+	void sendData ( int data );
 	boolean getIsFinished();
 };
 

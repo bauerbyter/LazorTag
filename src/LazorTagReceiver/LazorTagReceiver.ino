@@ -8,32 +8,31 @@ volatile unsigned long myLastTimeStamp;
 volatile bool myIsFinished = false;
 volatile bool myHasError = false;
 
-void setup() {
-	Serial.begin(115200);
+void setup()
+{
+	Serial.begin ( 115200 );
 
-	pinMode(irRecPin, INPUT);
-	pinMode(13, OUTPUT);
+	pinMode ( irRecPin, INPUT );
+	pinMode ( 13, OUTPUT );
 	resetData();
-	attachInterrupt(0, Interrupt, CHANGE);
-	Serial.println("los gehts");
-
-
-t
+	attachInterrupt ( 0, Interrupt, CHANGE );
+	Serial.println ( "los gehts" );
 }
 
-void loop() {
-	if (myIsFinished)
+void loop()
+{
+	if ( myIsFinished )
 	{
-		digitalWrite(13, HIGH);
-		
-		for (int j = 0; j < MAX_BIT; j++)
+		digitalWrite ( 13, HIGH );
+
+		for ( int j = 0; j < MAX_BIT; j++ )
 		{
 			//Serial.println(data[j]);
-		}		
-		getData();		
+		}
+		getData();
 		resetData();
-		digitalWrite(13, LOW);
-		
+		digitalWrite ( 13, LOW );
+
 		myIsFinished = false;
 	}
 
@@ -43,40 +42,40 @@ void getData()
 {
 	int result = 0;
 	int counter = 0;
-	for(int i = 0; i < MAX_BIT; i++)
+	for ( int i = 0; i < MAX_BIT; i++ )
 	{
-		if(i == 0)
+		if ( i == 0 )
 		{
-			if(data[i] <2200 || data[i] > 2600)
+			if ( data[i] < 2200 || data[i] > 2600 )
 			{
 				myHasError = true;
-				Serial.println("HEADER fehlt");
+				Serial.println ( "HEADER fehlt" );
 			}
 		}
-		else if(data[i] >2800)
+		else if ( data[i] > 2800 )
 		{
-			Serial.println("fertig");
+			Serial.println ( "fertig" );
 			i = MAX_BIT;
 		}
-		else if(i%2 == 1 )
+		else if ( i % 2 == 1 )
 		{
-			if(data[i] < 400 || data[i] > 800)
+			if ( data[i] < 400 || data[i] > 800 )
 			{
 				myHasError = true;
-				Serial.print("OFF fehler bei: ");
-				Serial.println(i);
+				Serial.print ( "OFF fehler bei: " );
+				Serial.println ( i );
 			}
 		}
 		else
 		{
-			
-			if(data[i] > 1000 & data[i] < 1400)
+
+			if ( data[i] > 1000 & data[i] < 1400 )
 			{
 				//Serial.print("Ist eine 1: ");
 				//Serial.println(data[i]);
-				result |= 1<<counter;
+				result |= 1 << counter;
 			}
-			else if (data[i] > 400 & data[i] < 800) //Todo eigentlich unnötig
+			else if ( data[i] > 400 & data[i] < 800 ) //Todo eigentlich unnötig
 			{
 				//Serial.print("Ist eine 0: ");
 				//Serial.println(data[i]);
@@ -85,29 +84,29 @@ void getData()
 			else
 			{
 				myHasError = true;
-				Serial.print("Bit fehler bei: ");
-				Serial.println(i);
+				Serial.print ( "Bit fehler bei: " );
+				Serial.println ( i );
 			}
 			counter ++;
 		}
-		
 	}
-	Serial.println(result);
+	Serial.println ( result );
 }
 
-void Interrupt() {
-	if (myIsFinished)
+void Interrupt()
+{
+	if ( myIsFinished )
 	{
 		return;
 	}
 	unsigned long currentTime = micros();
 	unsigned long duration = currentTime - myLastTimeStamp;
-	if (myLastTimeStamp == 0 || duration > 4500)
+	if ( myLastTimeStamp == 0 || duration > 4500 )
 	{
 		myLastTimeStamp = micros(); //error
 		return;
 	}
-	if (myCount >= MAX_BIT)
+	if ( myCount >= MAX_BIT )
 	{
 		myHasError = true;
 		myCount = 0;
@@ -120,7 +119,8 @@ void Interrupt() {
 	myLastTimeStamp = currentTime;
 	myCount++;
 
-	if (duration >= 2800) {
+	if ( duration >= 2800 )
+	{
 		myCount = 0;
 		myLastTimeStamp = 0;
 		myIsFinished = true;
@@ -130,7 +130,7 @@ void Interrupt() {
 
 void resetData()
 {
-	for (int i = 0; i < MAX_BIT; i++)
+	for ( int i = 0; i < MAX_BIT; i++ )
 	{
 		data[i] = 0;
 	}

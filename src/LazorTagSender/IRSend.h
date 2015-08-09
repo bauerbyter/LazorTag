@@ -8,7 +8,7 @@ class IRSend
 public:
 	IRSend();
 	void sendData ( int data );
-	boolean getIsFinished();
+	boolean getIsRunning();
 };
 
 #endif

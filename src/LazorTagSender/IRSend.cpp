@@ -10,7 +10,7 @@
 
 const int IRLedPin = 11;
 volatile int myCounter = 0;
-volatile boolean myIsFinished = true; //Maybe isRunning?
+volatile boolean myIsRunning = false;
 
 int myData = 0;
 
@@ -21,7 +21,6 @@ void startTimer1()
 
 void startTimer2()
 {
-	//TCCR2B|= (1 << CS20); //Start Timer 2 (38khz) - no prescaler
 	TCCR2A |= ( 1 << COM2A0 ); //turn on
 }
 
@@ -32,7 +31,6 @@ void stopTimer1()
 
 void stopTimer2()
 {
-	//TCCR2B &= ~(1 << CS20); //=>StopPWM
 	TCCR2A &= ~ ( 1 << COM2A0 );
 }
 
@@ -50,7 +48,7 @@ ISR ( TIMER1_COMPA_vect )
 		digitalWrite ( IRLedPin, LOW );
 		myCounter = 0;
 		myData = 0;
-		myIsFinished = true;
+		myIsRunning = false;
 	}
 	else
 	{
@@ -102,19 +100,20 @@ IRSend::IRSend( )
 
 void IRSend::sendData ( int data )
 {
-	if ( myIsFinished
-{
-	return;
-}
-myData = data;
-         myCounter = 0;
-         OCR1A = HEADER;
-         digitalWrite ( IRLedPin, HIGH );
-         startTimer1();
-         startTimer2();
+	if ( myIsRunning )
+	{
+		return;
+	}
+	myIsRunning = true;
+	myData = data;
+	myCounter = 0;
+	OCR1A = HEADER;
+	digitalWrite ( IRLedPin, HIGH );
+	startTimer1();
+	startTimer2();
 }
 
-boolean IRSend::getIsFinished()
+boolean IRSend::getIsRunning()
 {
-	return myIsFinished;
+	return myIsRunning;
 }

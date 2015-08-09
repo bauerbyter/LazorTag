@@ -14,7 +14,7 @@ void loop()
 		int incomingInt = Serial.parseInt();
 		Serial.print ( "I received: " );
 		Serial.println ( incomingInt );
-		while ( !irSend.getIsFinished() ) {}
+		while ( !irSend.getIsRunning() ) {}
 		irSend.sendData ( incomingInt );
 	}
 }

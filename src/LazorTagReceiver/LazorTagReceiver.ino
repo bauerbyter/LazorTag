@@ -1,67 +1,50 @@
-#define MAX_BIT 20
-
-const int irRecPin = 2;
-
-volatile unsigned long data[MAX_BIT];
-volatile int myCount;
-volatile unsigned long myLastTimeStamp;
-volatile bool myIsFinished = false;
-volatile bool myHasError = false;
+#include "IRReceive.h"
 
 void setup()
 {
 	Serial.begin ( 115200 );
-
-	pinMode ( irRecPin, INPUT );
-	pinMode ( 13, OUTPUT );
-	resetData();
-	attachInterrupt ( 0, Interrupt, CHANGE );
+	IRReceiveInit();
 	Serial.println ( "los gehts" );
 }
 
 void loop()
 {
-	if ( myIsFinished )
+	uint16_t bla[20];
+
+	if ( isDataAvailable() )
 	{
-		digitalWrite ( 13, HIGH );
 
-		for ( int j = 0; j < MAX_BIT; j++ )
-		{
-			//Serial.println(data[j]);
-		}
-		getData();
-		resetData();
-		digitalWrite ( 13, LOW );
-
-		myIsFinished = false;
+		getData ( bla );
+		readData ( bla );
+		resetData ();
 	}
 
 }
 
-void getData()
+void readData ( uint16_t data[] )
 {
 	int result = 0;
 	int counter = 0;
-	for ( int i = 0; i < MAX_BIT; i++ )
+	for ( int i = 0; i < 20; i++ )
 	{
 		if ( i == 0 )
 		{
 			if ( data[i] < 2200 || data[i] > 2600 )
 			{
-				myHasError = true;
+				//myHasError = true;
 				Serial.println ( "HEADER fehlt" );
 			}
 		}
 		else if ( data[i] > 2800 )
 		{
 			Serial.println ( "fertig" );
-			i = MAX_BIT;
+			i = 20;
 		}
 		else if ( i % 2 == 1 )
 		{
 			if ( data[i] < 400 || data[i] > 800 )
 			{
-				myHasError = true;
+				//myHasError = true;
 				Serial.print ( "OFF fehler bei: " );
 				Serial.println ( i );
 			}
@@ -83,7 +66,7 @@ void getData()
 			}
 			else
 			{
-				myHasError = true;
+				//myHasError = true;
 				Serial.print ( "Bit fehler bei: " );
 				Serial.println ( i );
 			}
@@ -93,46 +76,7 @@ void getData()
 	Serial.println ( result );
 }
 
-void Interrupt()
-{
-	if ( myIsFinished )
-	{
-		return;
-	}
-	unsigned long currentTime = micros();
-	unsigned long duration = currentTime - myLastTimeStamp;
-	if ( myLastTimeStamp == 0 || duration > 4500 )
-	{
-		myLastTimeStamp = micros(); //error
-		return;
-	}
-	if ( myCount >= MAX_BIT )
-	{
-		myHasError = true;
-		myCount = 0;
-		myLastTimeStamp = 0;
-		myIsFinished = true;
-		return;
-	}
 
-	data[myCount] = duration;
-	myLastTimeStamp = currentTime;
-	myCount++;
 
-	if ( duration >= 2800 )
-	{
-		myCount = 0;
-		myLastTimeStamp = 0;
-		myIsFinished = true;
-	}
 
-}
-
-void resetData()
-{
-	for ( int i = 0; i < MAX_BIT; i++ )
-	{
-		data[i] = 0;
-	}
-}
 

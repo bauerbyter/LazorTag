@@ -1,11 +1,11 @@
 #include "Arduino.h"
 #include "IRSend.h"
 
-#define HEADER 600 //2400ms
-#define END 750 //3000ms
-#define ONE 300 //1200ms
-#define ZERO 150 //600ms
-#define OFF 150 // 600ms 
+#define HEADER 600 //2400us
+#define END 750 //3000us
+#define ONE 300 //1200us
+#define ZERO 150 //600us
+#define OFF 150 // 600us 
 #define MAXBITS 8
 
 const int IRLedPin = 11;
@@ -94,8 +94,6 @@ IRSend::IRSend( )
 	TCCR1B = 0;     // same for TCCR1B
 	TCCR1B |= ( 1 << WGM12 );	// Mode 4, CTC on OCR1A
 	TIMSK1 |= ( 1 << OCIE1A ); //Set interrupt on compare match
-
-	sei();	// enable interrupts
 }
 
 void IRSend::sendData ( int data )

@@ -4,6 +4,7 @@ IRSend irSend;
 void setup()
 {
 	Serial.begin ( 115200 );
+	sei();	// enable interrupts
 }
 
 void loop()

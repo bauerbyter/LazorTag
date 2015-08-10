@@ -1,10 +1,11 @@
 #include "IRSend.h"
 
-IRSend irSend;
 void setup()
 {
 	Serial.begin ( 115200 );
+	initSend();
 	sei();	// enable interrupts
+
 }
 
 void loop()
@@ -15,7 +16,7 @@ void loop()
 		uint16_t incomingInt = Serial.parseInt();
 		Serial.print ( "I received: " );
 		Serial.println ( incomingInt );
-		while ( !irSend.getIsRunning() ) {}
-		irSend.sendData ( incomingInt );
+		//while ( irSend.getIsRunning() ) {}
+		sendData ( incomingInt );
 	}
 }

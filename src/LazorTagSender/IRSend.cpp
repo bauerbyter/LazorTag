@@ -79,7 +79,7 @@ ISR ( TIMER1_COMPA_vect )
 	}
 }
 
-IRSend::IRSend( )
+void initSend( )
 {
 	pinMode ( IRLedPin, OUTPUT );
 	//38khz Timer2
@@ -96,7 +96,7 @@ IRSend::IRSend( )
 	TIMSK1 |= ( 1 << OCIE1A ); //Set interrupt on compare match
 }
 
-void IRSend::sendData ( uint16_t data )
+void sendData ( uint16_t data )
 {
 	if ( myIsRunning )
 	{
@@ -106,12 +106,12 @@ void IRSend::sendData ( uint16_t data )
 	myData = data;
 	myCounter = 0;
 	OCR1A = HEADER;
-	digitalWrite ( IRLedPin, HIGH );
+	digitalWrite ( IRLedPin, LOW );
 	startTimer1();
 	startTimer2();
 }
 
-boolean IRSend::getIsRunning()
+boolean getIsRunning()
 {
 	return myIsRunning;
 }

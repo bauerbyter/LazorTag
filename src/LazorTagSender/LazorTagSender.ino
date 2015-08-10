@@ -12,7 +12,7 @@ void loop()
 	if ( Serial.available() > 0 )
 	{
 		// read the incoming byte:
-		int incomingInt = Serial.parseInt();
+		uint16_t incomingInt = Serial.parseInt();
 		Serial.print ( "I received: " );
 		Serial.println ( incomingInt );
 		while ( !irSend.getIsRunning() ) {}

@@ -7,7 +7,7 @@ class IRSend
 {
 public:
 	IRSend();
-	void sendData ( int data );
+	void sendData ( uint16_t data );
 	boolean getIsRunning();
 };
 

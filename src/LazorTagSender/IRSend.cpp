@@ -12,7 +12,7 @@ const int IRLedPin = 11;
 volatile int myCounter = 0;
 volatile boolean myIsRunning = false;
 
-int myData = 0;
+uint16_t myData = 0;
 
 void startTimer1()
 {
@@ -96,7 +96,7 @@ IRSend::IRSend( )
 	TIMSK1 |= ( 1 << OCIE1A ); //Set interrupt on compare match
 }
 
-void IRSend::sendData ( int data )
+void IRSend::sendData ( uint16_t data )
 {
 	if ( myIsRunning )
 	{

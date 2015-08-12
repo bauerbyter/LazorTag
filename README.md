@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/bauerbyter/LazorTag.png?label=ready&title=Ready)](https://waffle.io/bauerbyter/LazorTag)
 LazorTag
 ========
 

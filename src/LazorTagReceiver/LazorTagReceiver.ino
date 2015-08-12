@@ -20,7 +20,7 @@ void loop()
 	}
 
 }
-
+//Todo: edit for Lasertag.h and move to own c-file
 void readData ( uint16_t data[] )
 {
 	int result = 0;

@@ -1,14 +1,10 @@
 #include "Arduino.h"
 #include "IRSend.h"
+#include "../LazorTag.h"
 
-#define HEADER 600 //2400us
-#define END 750 //3000us
-#define ONE 300 //1200us
-#define ZERO 150 //600us
-#define OFF 150 // 600us 
-#define MAXBITS 8
-
+//Config
 const int IRLedPin = 11;
+
 volatile int myCounter = 0;
 volatile boolean myIsRunning = false;
 
@@ -41,7 +37,7 @@ void toggleTimer2()
 
 ISR ( TIMER1_COMPA_vect )
 {
-	if ( myCounter >= MAXBITS + 1 ) //+1 because of END
+	if ( myCounter >= IR_SHOOT_MAX_BITS + 1 ) //+1 because of END
 	{
 		stopTimer1();
 		stopTimer2();
@@ -56,22 +52,22 @@ ISR ( TIMER1_COMPA_vect )
 		{
 			stopTimer2();
 			digitalWrite ( IRLedPin, LOW );
-			OCR1A = OFF;
+			OCR1A = IR_OFF;
 		}
 		else
 		{
-			if ( myCounter == MAXBITS )
+			if ( myCounter == IR_SHOOT_MAX_BITS )
 			{
-				OCR1A = END;
+				OCR1A = IR_END;
 			}
 
 			else if ( myData & ( 1 << myCounter ) ) //Highest bit first
 			{
-				OCR1A = ONE;
+				OCR1A = IR_ONE;
 			}
 			else
 			{
-				OCR1A = ZERO;
+				OCR1A = IR_ZERO;
 			}
 			startTimer2();
 			myCounter++;
@@ -105,7 +101,7 @@ void sendData ( uint16_t data )
 	myIsRunning = true;
 	myData = data;
 	myCounter = 0;
-	OCR1A = HEADER;
+	OCR1A = IR_HEADER;
 	digitalWrite ( IRLedPin, LOW );
 	startTimer1();
 	startTimer2();

@@ -1,13 +1,11 @@
 #include "Arduino.h"
 #include "IRReceive.h"
+#include "../LazorTag.h"
 
-#define MAX_WAIT 4500
-#define MAX_BITS 20
-
+//Config
 const int irRecPin = 2;
 
-
-volatile uint16_t data[MAX_BITS];
+volatile uint16_t data[IR_SHOOT_MAX_SIGNALS];
 volatile int myCount;
 volatile unsigned long myLastTimeStamp;
 volatile boolean myIsFinished = false;
@@ -22,12 +20,12 @@ void interrupt()
 	unsigned long currentTime = micros();
 	unsigned long duration = currentTime - myLastTimeStamp;
 
-	if ( myLastTimeStamp == 0 || duration > MAX_WAIT ) //timer bauen
+	if ( myLastTimeStamp == 0 || duration > IR_MAX_WAIT ) //timer bauen
 	{
 		myLastTimeStamp = micros(); //error
 		return;
 	}
-	if ( myCount >= MAX_BITS )
+	if ( myCount >= IR_SHOOT_MAX_SIGNALS )
 	{
 		myHasError = true;
 		myCount = 0;
@@ -40,7 +38,7 @@ void interrupt()
 	myLastTimeStamp = currentTime;
 	myCount++;
 
-	if ( duration >= 2800 )
+	if ( duration >= ( IR_END - IR_DIFF ) )
 	{
 		myCount = 0;
 		myLastTimeStamp = 0;
@@ -57,7 +55,7 @@ boolean isDataAvailable()
 boolean getData ( uint16_t copy[] )
 {
 	int i;
-	for ( i = 0; i < MAX_BITS; i++ )
+	for ( i = 0; i < IR_SHOOT_MAX_SIGNALS; i++ )
 	{
 		copy[i] = data[i];
 	}
@@ -66,7 +64,7 @@ boolean getData ( uint16_t copy[] )
 void resetData()
 {
 	int i;
-	for ( i = 0; i < MAX_BITS; i++ )
+	for ( i = 0; i < IR_SHOOT_MAX_SIGNALS; i++ )
 	{
 		data[i] = 0;
 	}

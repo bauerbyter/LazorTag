@@ -1,4 +1,5 @@
 #include "IRReceive.h"
+#include "../libraries/LazorTag.h"
 
 void setup()
 {
@@ -9,12 +10,12 @@ void setup()
 
 void loop()
 {
-	uint16_t bla[20];
+	uint16_t data[IR_SHOOT_MAX_SIGNALS];
 
 	if ( IRR_IsDataAvailable() )
 	{
-		IRR_GetData ( bla );
-		readData ( bla );
+		IRR_GetData ( data );
+		Serial.println ( transformIrInInt ( data ) );
 		IRR_ResetData ();
 	}
 	else if ( IRR_HasError() )
@@ -25,60 +26,74 @@ void loop()
 	}
 
 }
-//Todo: edit for Lasertag.h and move to own c-file
-void readData ( uint16_t data[] )
+
+boolean isInRange ( uint16_t value, uint16_t ref )
+{
+	if ( value > ref - IR_DIFF && value < ref + IR_DIFF )
+	{
+		return true;
+	}
+	return false;
+}
+
+// 0 = error
+int transformIrInInt ( uint16_t data[] ) //Todo: maybe return bool?
 {
 	int result = 0;
 	int counter = 0;
-	for ( int i = 0; i < 20; i++ )
+	bool hasError = false;
+	for ( int i = 0; i < IR_SHOOT_MAX_SIGNALS; i++ )
 	{
+		Serial.println ( data[i] );
 		if ( i == 0 )
 		{
-			if ( data[i] < 2200 || data[i] > 2600 )
+			if ( !isInRange ( data[i], IR_HEADER ) )
 			{
-				//myHasError = true;
+				hasError = true;
+
 				Serial.println ( "HEADER fehlt" );
 			}
 		}
-		else if ( data[i] > 2800 )
+		else if ( isInRange ( data[i], IR_END ) )
 		{
 			Serial.println ( "fertig" );
-			i = 20;
+			if ( hasError )
+			{
+				return 0;
+			}
+			return result;
 		}
 		else if ( i % 2 == 1 )
 		{
-			if ( data[i] < 400 || data[i] > 800 )
+			if ( !isInRange ( data[i], IR_OFF ) )
 			{
-				//myHasError = true;
+				hasError = true;
 				Serial.print ( "OFF fehler bei: " );
 				Serial.println ( i );
 			}
 		}
 		else
 		{
-
-			if ( data[i] > 1000 & data[i] < 1400 )
+			if ( isInRange ( data[i], IR_ONE ) )
 			{
 				//Serial.print("Ist eine 1: ");
 				//Serial.println(data[i]);
 				result |= 1 << counter;
 			}
-			else if ( data[i] > 400 & data[i] < 800 ) //Todo eigentlich unnötig
+			else if ( isInRange ( data[i], IR_ZERO ) )
 			{
-				//Serial.print("Ist eine 0: ");
-				//Serial.println(data[i]);
 				//result &= 0<<counter;
 			}
 			else
 			{
-				//myHasError = true;
+				hasError = true;
 				Serial.print ( "Bit fehler bei: " );
 				Serial.println ( i );
 			}
 			counter ++;
 		}
 	}
-	Serial.println ( result );
+	return 0;
 }
 
 

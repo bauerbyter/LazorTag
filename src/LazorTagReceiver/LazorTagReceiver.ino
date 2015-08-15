@@ -3,7 +3,7 @@
 void setup()
 {
 	Serial.begin ( 115200 );
-	IRReceiveInit();
+	IRR_Init();
 	Serial.println ( "los gehts" );
 }
 
@@ -11,12 +11,17 @@ void loop()
 {
 	uint16_t bla[20];
 
-	if ( isDataAvailable() )
+	if ( IRR_IsDataAvailable() )
 	{
-
-		getData ( bla );
-		readData ( bla );
-		resetData ();
+		IRR_GetData ( bla );
+		readData ( bla ); //IF
+		IRR_ResetData ();
+	}
+	else if ( IRR_HasError() )
+	{
+		//Do Something with the Error
+		Serial.println ( "Error in IRReceive" );
+		IRR_ResetData ();
 	}
 
 }

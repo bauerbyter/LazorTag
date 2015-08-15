@@ -2,6 +2,10 @@
 #include "IRReceive.h"
 #include "../LazorTag.h"
 
+/*Design Desition
+ - Errors:
+
+*/
 //Config
 const int irRecPin = 2;
 
@@ -11,26 +15,24 @@ volatile unsigned long myLastTimeStamp;
 volatile boolean myIsFinished = false;
 volatile boolean myHasError = false;
 
+
 void interrupt()
 {
-	if ( myIsFinished )
+	if ( myIsFinished || myHasError )
 	{
 		return;
 	}
 	unsigned long currentTime = micros();
 	unsigned long duration = currentTime - myLastTimeStamp;
 
-	if ( myLastTimeStamp == 0 || duration > IR_MAX_WAIT ) //timer bauen
+	if ( myLastTimeStamp == 0 || duration > IR_MAX_WAIT ) //timer bauen der nach einer Zeit Error wirft
 	{
-		myLastTimeStamp = micros(); //error
+		myHasError = true;
 		return;
 	}
 	if ( myCount >= IR_SHOOT_MAX_SIGNALS )
 	{
 		myHasError = true;
-		myCount = 0;
-		myLastTimeStamp = 0;
-		myIsFinished = true;
 		return;
 	}
 
@@ -40,19 +42,26 @@ void interrupt()
 
 	if ( duration >= ( IR_END - IR_DIFF ) )
 	{
-		myCount = 0;
-		myLastTimeStamp = 0;
 		myIsFinished = true;
 	}
 
 }
 
-boolean isDataAvailable()
+boolean IRR_IsDataAvailable()
 {
-	return myIsFinished; //Todo Error?
+	if ( myHasError )
+	{
+		return false;
+	}
+	return myIsFinished;
 }
 
-boolean getData ( uint16_t copy[] )
+boolean IRR_HasError()
+{
+	return myHasError;
+}
+
+boolean IRR_GetData ( uint16_t copy[] )
 {
 	int i;
 	for ( i = 0; i < IR_SHOOT_MAX_SIGNALS; i++ )
@@ -61,19 +70,25 @@ boolean getData ( uint16_t copy[] )
 	}
 }
 
-void resetData()
+void IRR_ResetData()
 {
 	int i;
 	for ( i = 0; i < IR_SHOOT_MAX_SIGNALS; i++ )
 	{
 		data[i] = 0;
 	}
+
+	myCount = 0;
+	myLastTimeStamp = 0;
+
 	myIsFinished = false;
+	myHasError = false;
+
 }
 
-IRReceiveInit ( )
+IRR_Init ( )
 {
 	pinMode ( irRecPin, INPUT );
-	resetData();
+	IRR_ResetData();
 	attachInterrupt ( 0, interrupt, CHANGE );
 }

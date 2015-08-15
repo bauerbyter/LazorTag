@@ -6,10 +6,11 @@ extern "C" {
 
 #include "Arduino.h"
 
-void IRReceiveInit();
-boolean isDataAvailable();
-boolean getData ( uint16_t copy[] );
-void resetData();
+void IRR_Init();
+boolean IRR_IsDataAvailable();
+boolean IRR_GetData ( uint16_t copy[] );
+boolean IRR_HasError();
+void IRR_ResetData();
 
 }
 

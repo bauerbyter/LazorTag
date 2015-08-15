@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "IRReceive.h"
-#include "../LazorTag.h"
+#include "../libraries/LazorTag.h"
 
 /*Design Desition
  - Errors:

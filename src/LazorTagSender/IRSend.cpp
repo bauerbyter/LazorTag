@@ -52,22 +52,22 @@ ISR ( TIMER1_COMPA_vect )
 		{
 			stopTimer2();
 			digitalWrite ( IRLedPin, LOW );
-			OCR1A = IR_OFF;
+			OCR1A = T_OFF;
 		}
 		else
 		{
 			if ( myCounter == IR_SHOOT_MAX_BITS )
 			{
-				OCR1A = IR_END;
+				OCR1A = T_END;
 			}
 
 			else if ( myData & ( 1 << myCounter ) ) //Highest bit first
 			{
-				OCR1A = IR_ONE;
+				OCR1A = T_ONE;
 			}
 			else
 			{
-				OCR1A = IR_ZERO;
+				OCR1A = T_ZERO;
 			}
 			startTimer2();
 			myCounter++;
@@ -101,7 +101,7 @@ void sendData ( uint16_t data )
 	myIsRunning = true;
 	myData = data;
 	myCounter = 0;
-	OCR1A = IR_HEADER;
+	OCR1A = T_HEADER;
 	digitalWrite ( IRLedPin, LOW );
 	startTimer1();
 	startTimer2();

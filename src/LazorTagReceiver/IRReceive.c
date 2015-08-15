@@ -16,23 +16,47 @@ volatile boolean myIsFinished = false;
 volatile boolean myHasError = false;
 
 
+void startTimer1()
+{
+	TCNT1 = 0;
+	TCCR1B |= ( 1 << CS11 ) | ( 1 << CS10 ); // set prescaler to 64 and start TIMER1 (micro-Timer)
+}
+
+void stopTimer1()
+{
+	TCCR1B &= ~ ( ( 1 << CS10 ) | ( 1 << CS11 ) ); //Set Bit to 0 => StopTimer
+}
+
+ISR ( TIMER1_COMPA_vect )
+{
+	myHasError = true;
+	stopTimer1();
+}
+
 void interrupt()
 {
+	stopTimer1();
+
 	if ( myIsFinished || myHasError )
 	{
 		return;
 	}
+
+	startTimer1();
+
 	unsigned long currentTime = micros();
 	unsigned long duration = currentTime - myLastTimeStamp;
 
-	if ( myLastTimeStamp == 0 || duration > IR_MAX_WAIT ) //timer bauen der nach einer Zeit Error wirft
+	if ( myLastTimeStamp == 0 )
 	{
-		myHasError = true;
+		myLastTimeStamp = currentTime;
+		stopTimer1();
 		return;
 	}
 	if ( myCount >= IR_SHOOT_MAX_SIGNALS )
 	{
 		myHasError = true;
+		stopTimer1();
 		return;
 	}
 
@@ -43,6 +67,7 @@ void interrupt()
 	if ( duration >= ( IR_END - IR_DIFF ) )
 	{
 		myIsFinished = true;
+		stopTimer1();
 	}
 
 }
@@ -91,4 +116,11 @@ IRR_Init ( )
 	pinMode ( irRecPin, INPUT );
 	IRR_ResetData();
 	attachInterrupt ( 0, interrupt, CHANGE );
+
+	//Timer1 for duration
+	TCCR1A = 0;     // set entire TCCR1A register to 0
+	TCCR1B = 0;     // same for TCCR1B
+	TCCR1B |= ( 1 << WGM12 );	// Mode 4, CTC on OCR1A
+	TIMSK1 |= ( 1 << OCIE1A ); //Set interrupt on compare match
+	OCR1A = T_MAX_WAIT;
 }

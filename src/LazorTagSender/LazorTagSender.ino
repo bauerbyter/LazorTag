@@ -5,6 +5,7 @@ void setup()
 	Serial.begin ( 115200 );
 	initSend();
 	sei();	// enable interrupts
+	Serial.println ( "Sender ready" );
 
 }
 

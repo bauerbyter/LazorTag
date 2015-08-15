@@ -19,7 +19,8 @@
 #define T_END 					( IR_END / 4 )		// 750
 #define T_ONE 					( IR_ONE / 4 )		// 300
 #define T_ZERO 					( IR_ZERO / 4 )		// 150
-#define T_OFF 					( IR_OFF	/ 4 )	// 150 
+#define T_OFF 					( IR_OFF / 4 )		// 150 
+#define T_MAX_WAIT				( IR_MAX_WAIT / 4 )	// 1000 
 
 
 

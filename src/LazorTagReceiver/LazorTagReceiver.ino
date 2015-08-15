@@ -14,7 +14,7 @@ void loop()
 	if ( IRR_IsDataAvailable() )
 	{
 		IRR_GetData ( bla );
-		readData ( bla ); //IF
+		readData ( bla );
 		IRR_ResetData ();
 	}
 	else if ( IRR_HasError() )

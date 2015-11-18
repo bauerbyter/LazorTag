@@ -1,6 +1,8 @@
 #include "IRReceive.h"
 #include "../../libraries/LazorTag.h"
+#include <Wire.h>
 
+byte testTWI = 0;
 // 0 = error
 int transformIrInInt ( uint16_t data[] ) //Todo: maybe return bool?
 {
@@ -61,10 +63,13 @@ int transformIrInInt ( uint16_t data[] ) //Todo: maybe return bool?
 	return 0;
 }
 
+
 void setup()
 {
 	Serial.begin ( 115200 );
 	IRR_Init();
+	Wire.begin(8);                // join i2c bus with address #8
+  Wire.onRequest(requestEvent); // register event
 	Serial.println ( "los gehts" );
 }
 
@@ -75,8 +80,11 @@ void loop()
 	if ( IRR_IsDataAvailable() )
 	{
 		IRR_GetData ( data );
-		Serial.println ( transformIrInInt ( data ) );
+		int result = transformIrInInt ( data );
+		Serial.print ( "Incoming Data: " );
+		Serial.println ( result );
 		IRR_ResetData ();
+		testTWI = result;
 	}
 	else if ( IRR_HasError() )
 	{
@@ -85,6 +93,12 @@ void loop()
 		IRR_ResetData ();
 	}
 
+}
+
+void requestEvent() {
+  Wire.write( testTWI); // respond with message of 1 bytes
+	testTWI=0;
+  // as expected by master
 }
 
 boolean isInRange ( uint16_t value, uint16_t ref )

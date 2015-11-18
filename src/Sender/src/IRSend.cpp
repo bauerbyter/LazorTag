@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "IRSend.h"
-#include "../libraries/LazorTag.h"
+#include "../../libraries/LazorTag.h"
 
 //Config
 const int IRLedPin = 11;

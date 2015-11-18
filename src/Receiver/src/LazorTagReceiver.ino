@@ -1,40 +1,5 @@
 #include "IRReceive.h"
-#include "../libraries/LazorTag.h"
-
-void setup()
-{
-	Serial.begin ( 115200 );
-	IRR_Init();
-	Serial.println ( "los gehts" );
-}
-
-void loop()
-{
-	uint16_t data[IR_SHOOT_MAX_SIGNALS];
-
-	if ( IRR_IsDataAvailable() )
-	{
-		IRR_GetData ( data );
-		Serial.println ( transformIrInInt ( data ) );
-		IRR_ResetData ();
-	}
-	else if ( IRR_HasError() )
-	{
-		//Do Something with the Error
-		Serial.println ( "Error in IRReceive" );
-		IRR_ResetData ();
-	}
-
-}
-
-boolean isInRange ( uint16_t value, uint16_t ref )
-{
-	if ( value > ref - IR_DIFF && value < ref + IR_DIFF )
-	{
-		return true;
-	}
-	return false;
-}
+#include "../../libraries/LazorTag.h"
 
 // 0 = error
 int transformIrInInt ( uint16_t data[] ) //Todo: maybe return bool?
@@ -96,7 +61,37 @@ int transformIrInInt ( uint16_t data[] ) //Todo: maybe return bool?
 	return 0;
 }
 
+void setup()
+{
+	Serial.begin ( 115200 );
+	IRR_Init();
+	Serial.println ( "los gehts" );
+}
 
+void loop()
+{
+	uint16_t data[IR_SHOOT_MAX_SIGNALS];
 
+	if ( IRR_IsDataAvailable() )
+	{
+		IRR_GetData ( data );
+		Serial.println ( transformIrInInt ( data ) );
+		IRR_ResetData ();
+	}
+	else if ( IRR_HasError() )
+	{
+		//Do Something with the Error
+		Serial.println ( "Error in IRReceive" );
+		IRR_ResetData ();
+	}
 
+}
 
+boolean isInRange ( uint16_t value, uint16_t ref )
+{
+	if ( value > ref - IR_DIFF && value < ref + IR_DIFF )
+	{
+		return true;
+	}
+	return false;
+}

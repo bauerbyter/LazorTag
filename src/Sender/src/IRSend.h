@@ -3,14 +3,11 @@
 
 #ifdef __cplusplus
 extern "C" {
+# include "Arduino.h"
 
-#include "Arduino.h"
-
-
-void initSend();
-void sendData ( uint16_t data );
+void    initSend();
+void    sendData(uint16_t data);
 boolean getIsRunning();
-
 }
-#endif
-#endif
+#endif /* ifdef __cplusplus */
+#endif /* ifndef IRSend_h */

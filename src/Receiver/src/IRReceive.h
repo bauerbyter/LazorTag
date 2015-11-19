@@ -3,16 +3,14 @@
 
 #ifdef __cplusplus
 extern "C" {
+# include "Arduino.h"
 
-#include "Arduino.h"
-
-void IRR_Init();
+void    IRR_Init();
 boolean IRR_IsDataAvailable();
-boolean IRR_GetData ( uint16_t copy[] );
+boolean IRR_GetData(uint16_t copy[]);
 boolean IRR_HasError();
-void IRR_ResetData();
-
+void    IRR_ResetData();
 }
 
-#endif
-#endif
+#endif /* ifdef __cplusplus */
+#endif /* ifndef IRReceive_h */

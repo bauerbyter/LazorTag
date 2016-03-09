@@ -1,14 +1,18 @@
+#include "Display5110.h"
+#include "GameData.h"
 #include <Wire.h>
 
-int timestamp = 0;
+GameData myGameData = { 99, 0, 99 }; // display.bla(&myGameData);
 
-void setup()
-{
-  Wire.begin();         // join i2c bus (address optional for master)
-  Serial.begin(115200); // start serial for output
-}
+int myTimestamp = 0;
 
-void loop()
+const int myReceiverCount        = 5;                 // #define
+int myReceivers[myReceiverCount] = { 2, 4, 8, 3, 6 }; // Addresses
+#define SIZEOF(array) \
+  (sizeof(array) / sizeof(*array))                    // int x =
+                                                      // SIZEOF(myReceivers);
+
+void SerialZeug()                                     // kann bald weg
 {
   if (Serial.available() > 0)
   {
@@ -22,22 +26,46 @@ void loop()
     Wire.write(incomingInt);
     Wire.endTransmission();    // stop transmitting
   }
+}
 
-  if (millis() - timestamp >= 500)
+void setup()
+{
+  Wire.begin();         // join i2c bus (address optional for master)
+  Serial.begin(115200); // start serial for output
+  // Todo: initDisplay
+}
+
+void loop()
+{
+  SerialZeug();
+
+  if (millis() - myTimestamp >= 250)
   {
-    Wire.requestFrom(8, 1);  // request 6 bytes from slave device #8
+    readReceiver();
+  }
 
-    while (Wire.available()) // slave may send less than requested int i =
+  // todo: if button was pressed, lass die sau raus.
+}
+
+void readReceiver()
+{
+  for (int i = 0; i < myReceiverCount; i++)
+  {
+    Wire.requestFrom(myReceivers[i], 2);
+
+    while (Wire.available())
     {
-      byte b = Wire.read();  // receive a byte as character if(i != 0){
-                             // Serial.println(i); }
+      int incomingInt = Wire.read();
 
-      if (b != 0)
+      if (incomingInt != 0) // 0 heißt gibt nix
       {
-        Serial.print("Got Hit: ");
-        Serial.println(b);
+        // todo: in Array speichern
       }
     }
-    timestamp = millis();
   }
+
+  // todo: Wenn alles fertig die zahlen auswerten
+  myTimestamp = millis();
 }
+
+// Todo: Interrupt welchen den buttonstate ändert und dann im loop wird gefeuert

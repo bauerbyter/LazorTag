@@ -1,0 +1,11 @@
+Todo
+
+- einfache Display darstellung
+- Überprüfe eingehendes IR-Signal
+  - Wie lange ist der letzte Treffer her
+  - Habe ich mich selbst getroffen?
+  - Abzug der Spieldaten
+- Baue das IR-Signal zum senden
+  - Prüfbit
+- Fire Button
+- Muzzle LED

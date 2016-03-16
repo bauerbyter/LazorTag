@@ -1,0 +1,43 @@
+[Eagle]
+Version="07 05 00"
+Platform="Windows"
+Serial="62191E841E-LSR-WLM-1EL"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/GeekAmmo.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/LilyPad-Wearables.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Aesthetics.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-AnalogIC.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Boards.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Capacitors.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Connectors.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-DigitalIC.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-DiscreteSemi.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Displays.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Electromechanical.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-FreqCtrl.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-LED.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Passives.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-PowerIC.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-RF.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Resistors.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Retired.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/SparkFun-Sensors.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/SparkFun-Eagle/User-Submitted.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/adafruit-Adafruit-Eagle-Library/adafruit.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/element14/Vishay_By_element14_Batch_1.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/Own/vishay-1.lbr"
+UsedLibrary="C:/EAGLE-7.5.0/lbr/Own/vishay.lbr"
+
+[Win_1]
+Type="Control Panel"
+Loc="345 277 1565 837"
+State=2
+Number=0
+
+[Desktop]
+Screen="3840 1347"
+Window="Win_1"
